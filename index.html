@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>SÜDEV · Fruit Ninja</title>
+  <link rel="icon" type="image/png" href="südev logo 24.10.21.png">
+  <!-- SÜDEV Tasarım Dili Fontları: JetBrains Mono & IBM Plex Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=IBM+Plex+Sans:wght@400;500;600&subset=latin-ext&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <!-- MediaPipe El Takibi ve Three.js 3D WebGL Kütüphaneleri -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
+</head>
+<body class="blueprint">
+  <!-- MediaPipe için ham kamera akışı -->
+  <video id="webcam-raw" playsinline muted style="display:none;"></video>
+
+  <!-- Tam ekran oyun tuvali -->
+  <canvas id="game-canvas"></canvas>
+
+  <!-- ÜST BAR (HUD) -->
+  <header class="hud-bar">
+    <div class="hud-brand">
+      <div class="logo-box card">
+        <img src="südev logo 24.10.21.png" alt="SÜDEV Logo" class="sudev-logo">
+      </div>
+      <div class="brand-meta">
+        <div class="tag">
+          <span class="dot" id="cam-status-dot"></span>
+          <span id="cam-status-text">KAMERA HAZIRLANIYOR</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- OYUN İÇİ SKOR VE SAYAÇ KARTLARI -->
+    <div class="hud-stats" id="hud-stats">
+      <div class="stat-card card lift">
+        <span class="stat-label">INSTAGRAM</span>
+        <span class="stat-value player-handle" id="hud-player">@misafir</span>
+      </div>
+      <div class="stat-card card lift stat-score">
+        <span class="stat-label">PUAN</span>
+        <span class="stat-value" id="hud-score">0</span>
+      </div>
+      <div class="stat-card card lift stat-timer" id="timer-card">
+        <span class="stat-label">SÜRE</span>
+        <span class="stat-value" id="hud-timer">30.0s</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- GİRİŞ / BAŞLANGIÇ EKRANI (LOBİ) -->
+  <main class="overlay-screen" id="start-screen">
+    <div class="modal-single">
+      <section class="card lift main-panel">
+        <h1 class="hero-title">
+          Meyveleri<br>parmağınla <span class="ink-sun">kes</span>.
+        </h1>
+
+        <form id="start-form" class="start-form" autocomplete="off">
+          <label for="instagram-input" class="input-label">INSTAGRAM KULLANICI ADIN</label>
+          <div class="input-group">
+            <span class="input-prefix">@</span>
+            <input
+              type="text"
+              id="instagram-input"
+              placeholder="kullaniciadin"
+              required
+              maxlength="40"
+              autofocus
+            >
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="pill start-btn" id="start-btn">
+              Oyunu Başlat
+            </button>
+          </div>
+        </form>
+      </section>
+    </div>
+  </main>
+
+  <!-- GERİ SAYIM KATMANI (3 - 2 - 1 - KES!) -->
+  <div class="countdown-overlay hidden" id="countdown-overlay">
+    <div class="countdown-box card lift">
+      <div class="countdown-number" id="countdown-number">3</div>
+    </div>
+  </div>
+
+  <!-- OYUN SONU EKRANI -->
+  <section class="overlay-screen hidden" id="gameover-screen">
+    <div class="modal-single">
+      <div class="card lift main-panel">
+        <h1 class="hero-title">
+          Tur <span class="ink-sun">tamamlandı</span>.
+        </h1>
+
+        <div class="score-showcase bg-soot">
+          <div class="score-main">
+            <span class="score-label">TOPLAM PUAN</span>
+            <div class="score-big" id="final-score">0</div>
+            <span class="score-player" id="final-player">@kullanici</span>
+          </div>
+        </div>
+
+        <div class="insta-qr-card bg-blush">
+          <div class="qr-frame">
+            <img src="sudev-qr.svg" alt="SÜDEV Instagram QR (@sudevnet)" class="qr-image">
+          </div>
+          <div class="insta-qr-info">
+            <span class="insta-badge">INSTAGRAM · @sudevnet</span>
+            <h2 class="insta-title">Bizi takip etmeyi unutmayın!</h2>
+            <p class="insta-desc">Kameranızla QR kodu okutarak SÜDEV Instagram sayfasına ulaşabilirsiniz.</p>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="pill start-btn" id="new-player-btn">
+            Yeni Oyuncu Girişi
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="game.js"></script>
+</body>
+</html>

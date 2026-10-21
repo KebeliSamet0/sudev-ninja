@@ -1,0 +1,7 @@
+# Python ortamı
+.venv/
+__pycache__/
+# Oyuncu puanları (Instagram kullanıcı adları): depoya girmez, sunucu ilk açılışta boş oluşturur
+puanlar.json
+puanlar.xlsx
+.DS_Store
